@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  deploy:
+  build:
     runs-on: ubuntu-latest
  
     steps:
@@ -21,17 +21,48 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Test App
-        run: npm test
+      - name: Build App
+        run: npm run build
+
+  deploy:
+    needs: build
+
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v3.0.0 
+        with: 
+              node-version: "16.X"
         
       - name: Deploy to Server
         uses: appleboy/scp-action@master
         with:
-            source: '/*'
+            source: '*'
             host: ${{ secrets.REMOTE_HOST }}
             target: ${{ secrets.REMOTE_PATH }}
             port: ${{ secrets.SERVER_PORT }}
             username: ${{ secrets.USER_NAME }}
             key: ${{ secrets.SSH_KEY }}
+
+      - name: Start Serve
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo docker stop oj-back
+            sudo docker rm oj-back
+            sudo docker rmi oj-back
+            cd ${{ secrets.REMOTE_PATH }}
+            cp ../.env ./
+            sudo docker build -t oj-back .
+            sudo docker run -itd -p ${{ secrets.SERVE_PORT }}:${{ secrets.SERVE_PORT }} --name oj-back oj-back
+            cd ..
+            rm -rf ./code
+            mkdir code
 
       
