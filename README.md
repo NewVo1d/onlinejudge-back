@@ -5,18 +5,18 @@
 ### 本地开发
 
 ```bash
-$ npm i
-$ npm run dev
+$ yarn i
+$ yarn dev
 $ open http://localhost:7001/
 ```
 
 ### 部署
 
 ```bash
-$ npm start
+$ yarn start
 ```
 
 ### 内置指令
 
-- 使用 `npm run lint` 来做代码风格检查。
-- 使用 `npm test` 来执行单元测试。
+- 使用 `yarn lint` 来做代码风格检查。
+- 使用 `yarn test` 来执行单元测试。
