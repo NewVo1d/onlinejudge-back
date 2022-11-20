@@ -6,7 +6,10 @@ import * as info from '@midwayjs/info';
 import * as orm from '@midwayjs/orm';
 import * as jwt from '@midwayjs/jwt';
 import * as redis from '@midwayjs/redis';
+import * as dotenv from 'dotenv';
 import { DefaultErrorFilter, FormatMiddleware } from './utils/ImportHelper';
+
+dotenv.config();
 @Configuration({
   imports: [
     redis,

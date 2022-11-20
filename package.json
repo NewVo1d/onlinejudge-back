@@ -15,6 +15,7 @@
     "@midwayjs/redis": "^3.7.3",
     "@midwayjs/validate": "^3.0.0",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
     "mysql2": "^2.3.3",
     "typeorm": "^0.3.10"
   },
