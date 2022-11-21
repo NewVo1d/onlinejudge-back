@@ -31,11 +31,6 @@ jobs:
  
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install Node
-        uses: actions/setup-node@v3.0.0 
-        with: 
-              node-version: "16.X"
         
       - name: Deploy to Server
         uses: appleboy/scp-action@master
