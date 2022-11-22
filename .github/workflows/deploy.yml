@@ -2,21 +2,20 @@ name: Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
- 
+
     steps:
       - uses: actions/checkout@v2
 
       - name: Install Node
-        uses: actions/setup-node@v3.0.0 
-        with: 
-              node-version: "16.X"
+        uses: actions/setup-node@v3.0.0
+        with:
+          node-version: '16.X'
 
       - name: Install Dependencies
         run: npm install
@@ -28,19 +27,19 @@ jobs:
     needs: build
 
     runs-on: ubuntu-latest
- 
+
     steps:
       - uses: actions/checkout@v2
-        
+
       - name: Deploy to Server
         uses: appleboy/scp-action@master
         with:
-            source: '*'
-            host: ${{ secrets.REMOTE_HOST }}
-            target: ${{ secrets.REMOTE_PATH }}
-            port: ${{ secrets.SERVER_PORT }}
-            username: ${{ secrets.USER_NAME }}
-            key: ${{ secrets.SSH_KEY }}
+          source: '*'
+          host: ${{ secrets.REMOTE_HOST }}
+          target: ${{ secrets.REMOTE_PATH }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.SSH_KEY }}
 
       - name: Start Serve
         uses: appleboy/ssh-action@master
@@ -49,15 +48,11 @@ jobs:
           username: ${{ secrets.USER_NAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker stop oj-back
-            sudo docker rm oj-back
-            sudo docker rmi oj-back
+            docker stop oj-back
+            docker rm oj-back
+            docker rmi oj-back
             cd ${{ secrets.REMOTE_PATH }}
             cp ../.env ./
-            sudo docker build -t oj-back .
-            sudo docker run -itd -p ${{ secrets.SERVE_PORT }}:${{ secrets.SERVE_PORT }} --name oj-back oj-back
-            cd ..
-            rm -rf ./code
-            mkdir code
-
-      
+            docker build -t oj-back .
+            docker run -itd -p ${{ secrets.SERVE_PORT }}:${{ secrets.SERVE_PORT }} --name oj-back oj-back
+            rm -rf ./*
