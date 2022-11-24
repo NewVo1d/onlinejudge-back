@@ -47,10 +47,13 @@ export default class SecurityMiddleware implements IMiddleware<Context, NextFunc
     };
   }
 
-  ignore(ctx: Context) {
+  public match(ctx: Context): boolean {
     const { path } = ctx;
-    const { ignore } = this.securityConfig;
-    return path.indexOf(ignore) === 0;
+    const { prefix, ignore } = this.securityConfig;
+    const exist = ignore.find(item => {
+      return item.match(path);
+    });
+    return path.indexOf(prefix) === 0 && !exist;
   }
 
   static getName(): string {

@@ -30,8 +30,8 @@ export default {
   },
   app: {
     security: {
-      prefix: '/api',
-      ignore: '/api/common',
+      prefix: '/api/',
+      ignore: ['/api/common'],
     },
   },
 } as MidwayConfig;

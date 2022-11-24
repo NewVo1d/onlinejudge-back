@@ -7,7 +7,9 @@ import * as orm from '@midwayjs/orm';
 import * as jwt from '@midwayjs/jwt';
 import * as redis from '@midwayjs/redis';
 import * as dotenv from 'dotenv';
-import { DefaultErrorFilter, FormatMiddleware } from './utils/ImportHelper';
+import FormatMiddleware from './middleware/format.middleware';
+import DefaultErrorFilter from './filter/default.filter';
+import SecurityMiddleware from './middleware/security.middleware';
 
 dotenv.config();
 @Configuration({
@@ -29,7 +31,7 @@ export class ContainerLifeCycle {
   app: koa.Application;
 
   async onReady() {
-    this.app.useMiddleware([FormatMiddleware]);
+    this.app.useMiddleware([SecurityMiddleware, FormatMiddleware]);
     this.app.useFilter([DefaultErrorFilter]);
   }
 }

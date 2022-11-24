@@ -1,27 +1,33 @@
 import { Inject, Provide } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import { UserEntity, BaseService } from '../utils/ImportHelper';
+import UserEntity from '../entity/user.entity';
 import PasswordCoder from '../utils/PasswordCoder';
+import { BaseService } from './base.service';
 
 @Provide()
 export default class UserService extends BaseService<UserEntity> {
   @InjectEntityModel(UserEntity)
   model: Repository<UserEntity>;
 
-  @Inject()
-  passwordCoder: PasswordCoder;
-
   getModel(): Repository<UserEntity> {
     return this.model;
   }
 
-  async register(user: UserEntity) {
-    user.password = this.passwordCoder.encrypt(user.password);
+  @Inject()
+  passwordCoder: PasswordCoder;
+
+  async save(user: UserEntity) {
     return super.save(user);
   }
 
-  async findByUsername(username: string): Promise<UserEntity> {
-    return this.model.findOne({ where: { username } });
+  async register(user: UserEntity) {
+    user.password = this.passwordCoder.encrypt(user.password);
+    await super.save(user);
+    return true;
+  }
+
+  async findByEmail(email: string): Promise<UserEntity> {
+    return this.model.findOne({ where: { email } });
   }
 }
