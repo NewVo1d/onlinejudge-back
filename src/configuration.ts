@@ -7,6 +7,7 @@ import * as orm from '@midwayjs/orm';
 import * as jwt from '@midwayjs/jwt';
 import * as redis from '@midwayjs/redis';
 import * as dotenv from 'dotenv';
+import * as crossDomain from '@midwayjs/cross-domain';
 import FormatMiddleware from './middleware/format.middleware';
 import DefaultErrorFilter from './filter/default.filter';
 import SecurityMiddleware from './middleware/security.middleware';
@@ -14,6 +15,7 @@ import SecurityMiddleware from './middleware/security.middleware';
 dotenv.config();
 @Configuration({
   imports: [
+    crossDomain,
     redis,
     jwt,
     orm,

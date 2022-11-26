@@ -24,6 +24,9 @@ export default {
       db: 0,
     },
   },
+  cors: {
+    allowMethods: '*',
+  },
   jwt: {
     secret: 'setscrew',
     expiresIn: 60 * 60 * 24,
@@ -31,7 +34,7 @@ export default {
   app: {
     security: {
       prefix: '/api/',
-      ignore: ['/api/common'],
+      ignore: ['/api/common/', '/api/test/'],
     },
   },
 } as MidwayConfig;
