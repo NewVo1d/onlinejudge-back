@@ -51,7 +51,7 @@ export default class SecurityMiddleware implements IMiddleware<Context, NextFunc
     const { path } = ctx;
     const { prefix, ignore } = this.securityConfig;
     const exist = ignore.find(item => {
-      return item.match(path);
+      return path.match(item);
     });
     return path.indexOf(prefix) === 0 && !exist;
   }
