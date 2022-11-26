@@ -59,7 +59,7 @@
     "dist"
   ],
   "lint-staged": {
-    "*.{js,ts,tsx,json}": [
+    "*.{js,ts}": [
       "eslint --fix"
     ]
   }
