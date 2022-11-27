@@ -4,7 +4,7 @@ import { RedisService } from '@midwayjs/redis';
 import { httpError, IMiddleware } from '@midwayjs/core';
 import { Context, NextFunction } from '@midwayjs/koa';
 import { Constant } from '../common/constant.common';
-import UserContext from '../common/usercontext.common';
+import { UserContext } from '../common/context.common';
 
 @Middleware()
 export default class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
@@ -36,12 +36,12 @@ export default class SecurityMiddleware implements IMiddleware<Context, NextFunc
       const jwt = await this.jwtService.verify(token, { complete: true });
       const payload = jwt['payload'];
       const key = Constant.TOKEN_NAME + ':' + payload.id + ':' + token;
-      const ucStr = await this.redisService.get(key);
-      const uc: UserContext = JSON.parse(ucStr);
-      if (payload.username !== uc.username) {
+      const userContextStr = await this.redisService.get(key);
+      const userContext: UserContext = JSON.parse(userContextStr);
+      if (payload.email !== userContext.email) {
         throw new httpError.UnauthorizedError(Constant.TOKEN_INVALID);
       }
-      ctx.userContext = uc;
+      ctx.userContext = userContext;
 
       return next();
     };

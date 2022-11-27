@@ -3,7 +3,7 @@ import { JwtService } from '@midwayjs/jwt';
 import { RedisService } from '@midwayjs/redis';
 import Assert from '../common/assert.common';
 import { Constant, StatusCode } from '../common/constant.common';
-import UserContext from '../common/usercontext.common';
+import { UserContext } from '../common/context.common';
 import PasswordCoder from '../utils/PasswordCoder';
 import { LoginDTO, RegisterDTO } from '../common/dto.common';
 import UserService from './user.service';
@@ -34,7 +34,7 @@ export default class CommonService {
     const isEqual = this.passwordCoder.decrypt(loginDTO.password, user.password);
     Assert.isTrue(isEqual, StatusCode.UN_ERROR, '用户名或者密码错误');
 
-    const userContext: UserContext = new UserContext(user.id, user.username);
+    const userContext: UserContext = new UserContext(user.id, user.email);
     const authorization = await this.jwtService.sign({ ...userContext });
 
     const key = Constant.TOKEN_NAME + ':' + user.id + ':' + authorization;
